@@ -8,26 +8,19 @@ defmodule Ar.MixProject do
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      escript: escript(),
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {MetricsApp.Application, []}
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
-    [
-      {:artificery, "~> 0.2"},
-      {:distillery, "~> 1.5", runtime: false},
-    ]
+    []
   end
 
-  defp escript do
-    [main_module: HelloCmd]
-  end
 end

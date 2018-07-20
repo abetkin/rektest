@@ -52,31 +52,8 @@ defmodule Metric do
 end
 
 
-defmodule MetricApp do
+defmodule MetricsApp do
   use GenServer
-
-  ## Client API
-
-
-  def start_link(opts) do
-    GenServer.start_link(__MODULE__, :ok, opts)
-  end
-
-  @doc """
-  Looks up the bucket pid for `name` stored in `server`.
-
-  Returns `{:ok, pid}` if the bucket exists, `:error` otherwise.
-  """
-  def lookup(server, name) do
-    GenServer.call(server, {:lookup, name})
-  end
-
-  @doc """
-  Ensures there is a bucket associated with the given `name` in `server`.
-  """
-  def create(server, name) do
-    GenServer.cast(server, {:create, name})
-  end
 
   ## Server Callbacks
 
