@@ -52,7 +52,7 @@ defmodule Metric do
 end
 
 
-defmodule MetricsApp do
+defmodule MetricsServer do
   use GenServer
 
   ## Server Callbacks

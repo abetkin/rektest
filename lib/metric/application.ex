@@ -2,7 +2,7 @@ defmodule Throughput do end
 defmodule Latency do end
 
 
-defmodule MetricsApp.Application do
+defmodule MetricsServer.Application do
   use Application
 
   @metrics_list [
