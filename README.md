@@ -10,8 +10,12 @@ This superviser takes care of registering the new processes by the metrics name 
 ```
 iex(1)> Metrics.Server.new_metric :score
 #PID<0.136.0>
-iex(2)> Process.whereis :score
+iex(2)> :score |> Process.whereis
 #PID<0.136.0>
+iex(2)> :score |> Process.whereis |> Process.exit(:kill)
+true
+iex(3)> :score |> Process.whereis
+#PID<0.139.0>
 ```
 
 Then you can start reporting values for a metric. Let's test the 2 API functions, `report` and `average`:
