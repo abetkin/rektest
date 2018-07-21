@@ -1,5 +1,5 @@
 defmodule Metric do
-  @len 3
+  @len 5
 
   defstruct [
     list: [],
