@@ -3,7 +3,7 @@ defmodule Metric do
 
   """
 
-  @len 3 # from config / process
+  @len 3
 
   defstruct [
     list: [],
@@ -49,28 +49,41 @@ defmodule Metric do
     }
   end
 
+  def get_average(%Metric{sum: sum}) do
+    sum / @len
+  end
+
 end
 
 
 defmodule MetricsServer do
   use GenServer
 
-  ## Server Callbacks
+  ## API
 
-  def init(:ok) do
-    {:ok, %Metric{}}
-  end
-
-  def handle_cast({:report, name, value}, _from, _) do
-    {:noreply}
-  end
-
-  def handle_call({:average, name}, names) do
-    if Map.has_key?(names, name) do
-      {:noreply, names}
-    else
-      {:ok, bucket} = KV.Bucket.start_link([])
-      {:noreply, Map.put(names, name, bucket)}
+  def report(name, value) do
+    pid = case Process.whereis(name) do
+      nil ->
+        {:ok, pid} = MetricsServer.Supervisor |> DynamicSupervisor.start_child(%{
+          id: name,
+          start: {__MODULE__, :start_link, [%Metric{}], name: name}
+        })
+        pid
+      pid -> pid
     end
+    pid |> GenServer.cast({:report, value})
+  end
+
+  def average(name) do
+    {:ok, value} = name |> GenServer.call({:average})
+    value
+  end
+
+  def handle_cast(pid, {:report, value}, _from, metric) do
+    {:noreply, metric |> Metric.append(value)}
+  end
+
+  def handle_call(pid, {:average}, metric) do
+    {:ok, metric |> Metric.get_average}
   end
 end

@@ -17,7 +17,7 @@ defmodule MetricsServer.Application do
         start: {MetricsApp, :start_link, [M, [:hello]]}
       }
     end
-    opts = [strategy: :one_for_one, name: MetricsApp.Supervisor]
+    opts = [strategy: :one_for_one, name: MetricsServer.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
