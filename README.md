@@ -1,6 +1,6 @@
 # Metrics
 
-To run the application and to drop into iex shell:
+To run the application and drop into iex shell:
 
 ```iex -S mix run```
 
