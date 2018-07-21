@@ -5,7 +5,7 @@ To run the application and drop into iex shell:
 ```iex -S mix run```
 
 Each metric is a separate process, supervised by a [DynamicSupervisor](https://hexdocs.pm/elixir/master/DynamicSupervisor.html).
-This superviser takes care of registering the new processes by the metrics name as well as monitoring and resterting them on failure.
+This superviser takes care of registering the new processes by the metrics name as well as monitoring and restarting them on failure.
 
 ```
 iex(1)> Metrics.Server.new_metric :score
