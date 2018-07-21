@@ -8,12 +8,14 @@ defmodule Metric do
   ]
 
   def append(%Metric{list: list, reversed: nil} = m, value) when length(list) < @len do
+    # Initial population of the list
     %Metric{m |
       list: [value | list],
     }
   end
 
   def append(%Metric{list: list, reversed: nil} = m, value) when length(list) == @len do
+    # length(list) has reached @len (as a result of its initial population)
     m = %Metric{
       list: list,
       reversed: Enum.reverse(list),
