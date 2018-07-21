@@ -1,8 +1,4 @@
 defmodule Metric do
-  @moduledoc """
-
-  """
-
   @len 3
 
   defstruct [
@@ -49,41 +45,17 @@ defmodule Metric do
     }
   end
 
+  def get_average(%Metric{list: []}) do
+    {:error, "no data yet"}
+  end
+
+  def get_average(%Metric{sum: nil, list: list}) do
+    Enum.sum(list) / length(list)
+  end
+
   def get_average(%Metric{sum: sum}) do
     sum / @len
   end
 
 end
 
-
-defmodule MetricsServer do
-  use GenServer
-
-  ## API
-
-  def report(name, value) do
-    pid = case Process.whereis(name) do
-      nil ->
-        {:ok, pid} = MetricsServer.Supervisor |> DynamicSupervisor.start_child(%{
-          id: name,
-          start: {__MODULE__, :start_link, [%Metric{}], name: name}
-        })
-        pid
-      pid -> pid
-    end
-    pid |> GenServer.cast({:report, value})
-  end
-
-  def average(name) do
-    {:ok, value} = name |> GenServer.call({:average})
-    value
-  end
-
-  def handle_cast(pid, {:report, value}, _from, metric) do
-    {:noreply, metric |> Metric.append(value)}
-  end
-
-  def handle_call(pid, {:average}, metric) do
-    {:ok, metric |> Metric.get_average}
-  end
-end
