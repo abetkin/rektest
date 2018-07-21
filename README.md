@@ -69,11 +69,8 @@ iex(11)> m.list |> Enum.join(", ")
 "11, 10, 9, 8, 7"
 iex(12)> m.reversed |> Enum.join(", ")
 "7, 8, 9, 10, 11"
-```
-
-We see that avery time the sum increases by 5, that is what we expected.
-
-```
 iex(13)> m |> Metric.get_average
 9.0
 ```
+
+We see that every time the sum increased by 5, that is what we expected.
