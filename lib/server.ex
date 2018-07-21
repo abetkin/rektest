@@ -5,6 +5,7 @@ defmodule Metrics.Server do
     ## API
   
     def start_link(name) do
+      # function is a part of the child spec, to be used by the supervisor
       GenServer.start_link(__MODULE__, %Metric{}, name: name)
     end
   
