@@ -1,4 +1,6 @@
 defmodule Metric do
+  use ShortDef
+
   @len 5
 
   defstruct [
@@ -7,14 +9,14 @@ defmodule Metric do
     sum: nil,
   ]
 
-  def append(%Metric{list: list, reversed: nil} = m, value) when length(list) < @len do
+  def append(%Metric{list, reversed: nil} = m, value) when length(list) < @len do
     # Initial population of the list
     %Metric{m |
       list: [value | list],
     }
   end
 
-  def append(%Metric{list: list, reversed: nil} = m, value) when length(list) == @len do
+  def append(%Metric{list, reversed: nil}, value) when length(list) == @len do
     # length(list) has reached @len (as a result of its initial population)
     m = %Metric{
       list: list,
@@ -24,7 +26,7 @@ defmodule Metric do
     append(m, value)
   end
 
-  def append(%Metric{list: list, reversed: [], sum: sum}, value) do
+  def append(%Metric{list, sum, reversed: []}, value) do
     # reversed has been shrunk to []
     {new_list, [last]} = list
     |> Stream.take(@len)
@@ -37,7 +39,7 @@ defmodule Metric do
     }
   end
 
-  def append(%Metric{list: list, reversed: reversed, sum: sum} = m, value) when length(reversed) != 0 do
+  def append(%Metric{list, reversed, sum}, value) when length(reversed) != 0 do
     # general case
     [last | new_reversed] = reversed
     %Metric{
@@ -51,11 +53,11 @@ defmodule Metric do
     {:error, "no data yet"}
   end
 
-  def get_average(%Metric{sum: nil, list: list}) do
+  def get_average(%Metric{list, sum: nil}) do
     Enum.sum(list) / length(list)
   end
 
-  def get_average(%Metric{sum: sum}) do
+  def get_average(%Metric{sum}) do
     sum / @len
   end
 

@@ -19,7 +19,9 @@ defmodule Metrics.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:shortdef, "~> 0.1.0"}
+    ]
   end
 
 end

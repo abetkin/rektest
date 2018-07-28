@@ -1,4 +1,5 @@
 %{
   "artificery": {:hex, :artificery, "0.2.5", "93861899e8bb9e9ed980142e91612d2731bff33cb20af1d15c833da052b9ba4d", [:mix], [], "hexpm"},
   "distillery": {:hex, :distillery, "1.5.3", "b2f4fc34ec71ab4f1202a796f9290e068883b042319aa8c9aa45377ecac8597a", [:mix], [], "hexpm"},
+  "shortdef": {:hex, :shortdef, "0.1.0", "d4267603d146b689cbc8e2c2778232fcd29905b68ee8ca83ee506e53bf0642e5", [:mix], [], "hexpm"},
 }
