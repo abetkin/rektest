@@ -1,12 +1,32 @@
 
+defmodule State do
+  defstruct [
+    :start,
+    list: [],
+    metric: %Metric{},
+  ]
+end
+
 defmodule Metrics.Server do
     use GenServer
+    use ShortDef
 
     ## API
 
+    @beat_interval 3_000
+
     def start_link(name) do
       # function is a part of the child spec, to be used by the supervisor
-      GenServer.start_link(__MODULE__, %Metric{}, name: name)
+      Task.async(fn -> schedule_pulse(name) end)
+      GenServer.start_link(__MODULE__, %State{}, name: name)
+    end
+
+    defp schedule_pulse(name) do
+      receive do
+      after @beat_interval ->
+        name |> GenServer.cast(:pulse)
+        schedule_pulse(name)
+      end
     end
 
     def new_metric(name) do
@@ -27,16 +47,29 @@ defmodule Metrics.Server do
 
     # Server
 
-    def init(args) do
-      {:ok, args}
+    def init(%State{} = s) do
+      {:ok, s}
     end
 
-    def handle_cast({:report, value}, metric) do
-      {:noreply, metric |> Metric.append(value)}
+    def handle_cast({:report, value}, %State{list, metric} = s) do
+      new_state = %State{s | list: [value | list]}
+      # TODO handle time
+      {:noreply, new_state}
     end
 
-    def handle_call({:average}, _from, metric) do
-      {:reply, metric |> Metric.get_average, metric}
+    def handle_cast(:pulse, %State{list, metric} = state) do
+      avg = case list do
+        [] -> 0
+        _ -> Enum.sum(list) / length(list)
+      end
+      |> IO.inspect(label: :new)
+      metric = metric |> Metric.append(avg)
+      new_state = %State{state | metric: metric, list: []}
+      {:noreply, new_state}
+    end
+
+    def handle_call({:average}, _from, %State{metric} = s) do
+      {:reply, metric |> Metric.get_average, s}
     end
   end
 
